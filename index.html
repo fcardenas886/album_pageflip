@@ -128,31 +128,33 @@
 <script>
   // Inicia efecto libro
   const pageFlip = new St.PageFlip(document.getElementById("flipbook"), {
-    width: 400,
-    height: 500,
-    size: "fixed",
-    showCover: true,
-    maxShadowOpacity: 0.5,
-    mobileScrollSupport: true
-  });
+  width: 400,
+  height: 500,
+  size: "fixed",
+  showCover: true,
+  maxShadowOpacity: 0.5,
+  mobileScrollSupport: true
+});
 
-  pageFlip.loadFromHTML(document.querySelectorAll(".page"));
+pageFlip.loadFromHTML(document.querySelectorAll(".page"));
 
-  // Inicia GLightbox
-  const lightbox = GLightbox({
-    selector: '.glightbox',
-    touchNavigation: true,
-    loop: true,
-    zoomable: true,
-    openEffect: 'zoom',
-    closeEffect: 'zoom',
-    slideEffect: 'slide'
-  });
+// Inicia GLightbox
+const lightbox = GLightbox({
+  selector: '.glightbox',
+  touchNavigation: true,
+  loop: true,
+  zoomable: true,
+  openEffect: 'zoom',
+  closeEffect: 'zoom',
+  slideEffect: 'slide'
+});
 
-  // Bloquear flipbook al hacer clic en las imágenes
-  document.querySelectorAll('.page a img').forEach(img => {
-    img.addEventListener('pointerdown', e => e.stopPropagation());
+// Bloquear que el flipbook cambie página al tocar el enlace de la imagen
+document.querySelectorAll('.page a').forEach(anchor => {
+  ['pointerdown', 'pointerup', 'touchstart', 'touchend', 'mousedown', 'mouseup'].forEach(evt => {
+    anchor.addEventListener(evt, e => e.stopPropagation());
   });
+});
 </script>
 
 </body>
