@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -15,12 +15,15 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      overflow: hidden;
     }
 
     #flipbook {
       width: 800px;
       height: 500px;
       box-shadow: 0 0 15px rgba(176, 65, 109, 0.5);
+      position: relative;
+      z-index: 1; /* 🔽 IMPORTANTE: aseguramos que Glightbox se superponga */
     }
 
     .page {
@@ -42,11 +45,23 @@
       box-shadow: 0 0 5px rgba(176, 65, 109, 0.3);
       margin-bottom: 10px;
       cursor: zoom-in;
+      transition: transform 0.3s ease;
+    }
+
+    .page img:hover {
+      transform: scale(1.03);
     }
 
     .caption {
       font-style: italic;
       text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      #flipbook {
+        transform: scale(0.9);
+        transform-origin: top;
+      }
     }
   </style>
 </head>
@@ -54,7 +69,7 @@
 
 <div id="flipbook">
   <div class="page">
-    <h1 style="font-family: 'Great Vibes', cursive;">Nuestro Album 💖</h1>
+    <h1 style="font-family: 'Great Vibes', cursive;">Nuestro Álbum 💖</h1>
   </div>
 
   <div class="page">
@@ -68,25 +83,25 @@
     <a href="imagenes/dos.jpeg" class="glightbox" data-gallery="album">
       <img src="imagenes/dos.jpeg" alt="Foto 2" />
     </a>
-    <div class="caption">Primeras Fotos</div>
+    <div class="caption">Momentos especiales</div>
   </div>
 
   <div class="page">
     <a href="imagenes/tres.jpeg" class="glightbox" data-gallery="album">
       <img src="imagenes/tres.jpeg" alt="Foto 3" />
     </a>
-    <div class="caption">Las Primeras de muchas mas ...</div>
+    <div class="caption">Nuestras aventuras</div>
   </div>
 
   <div class="page">
     <a href="imagenes/cuatro.jpeg" class="glightbox" data-gallery="album">
-      <img src="imagenes/cuatro.jpeg" alt="Foto 3" />
+      <img src="imagenes/cuatro.jpeg" alt="Foto 4" />
     </a>
-    <div class="caption">Y continuaran ...</div>
+    <div class="caption">Y vendrán muchas más...</div>
   </div>
 
   <div class="page">
-    <h2>Nuetro Album 💕</h2>
+    <h2>Fin del Capítulo 💕</h2>
   </div>
 </div>
 
@@ -95,6 +110,7 @@
 <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 
 <script>
+  // Inicia efecto libro
   const pageFlip = new St.PageFlip(document.getElementById("flipbook"), {
     width: 400,
     height: 500,
@@ -106,12 +122,25 @@
 
   pageFlip.loadFromHTML(document.querySelectorAll(".page"));
 
+  // Inicia GLightbox
   const lightbox = GLightbox({
     selector: '.glightbox',
     touchNavigation: true,
     loop: true,
-    zoomable: true,
+    zoomable: true, // ✅ zoom elegante
+    openEffect: 'zoom',
+    closeEffect: 'zoom',
+    slideEffect: 'slide'
   });
+
+  // Detener propagación del clic para evitar cambio de página
+  // document.querySelectorAll('.page a img').forEach(img => {
+  //   img.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
+  //   img.addEventListener('click', (e) => e.stopPropagation());
+  // });
+  document.querySelectorAll('.page a img').forEach(img => {
+  img.addEventListener('pointerdown', e => e.stopPropagation()); // 👈 más efectivo para bloquear flipbook
+});
 </script>
 
 </body>
