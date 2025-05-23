@@ -1,21 +1,34 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Álbum de Amor 💖</title>
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
   <style>
     body {
-      background-color: #fff0f5;
+      background: url('imagenes/fondo.jpg') no-repeat center center fixed;
+      background-size: cover;
       font-family: 'Quicksand', sans-serif;
       margin: 0;
       padding: 0;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
       overflow: hidden;
+      position: relative;
+    }
+
+    /* Capa con blur detrás del flipbook */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 0;
+      background-color: rgba(255, 240, 245, 0.3); /* color semi-transparente para mejor efecto */
     }
 
     #flipbook {
@@ -23,7 +36,10 @@
       height: 500px;
       box-shadow: 0 0 15px rgba(176, 65, 109, 0.5);
       position: relative;
-      z-index: 1; /* 🔽 IMPORTANTE: aseguramos que Glightbox se superponga */
+      z-index: 1;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
     }
 
     .page {
@@ -117,7 +133,7 @@
     size: "fixed",
     showCover: true,
     maxShadowOpacity: 0.5,
-    mobileScrollSupport: false
+    mobileScrollSupport: true
   });
 
   pageFlip.loadFromHTML(document.querySelectorAll(".page"));
@@ -127,21 +143,18 @@
     selector: '.glightbox',
     touchNavigation: true,
     loop: true,
-    zoomable: true, // ✅ zoom elegante
+    zoomable: true,
     openEffect: 'zoom',
     closeEffect: 'zoom',
     slideEffect: 'slide'
   });
 
-  // Detener propagación del clic para evitar cambio de página
-  // document.querySelectorAll('.page a img').forEach(img => {
-  //   img.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
-  //   img.addEventListener('click', (e) => e.stopPropagation());
-  // });
+  // Bloquear flipbook al hacer clic en las imágenes
   document.querySelectorAll('.page a img').forEach(img => {
-  img.addEventListener('pointerdown', e => e.stopPropagation()); // 👈 más efectivo para bloquear flipbook
-});
+    img.addEventListener('pointerdown', e => e.stopPropagation());
+  });
 </script>
 
 </body>
 </html>
+
