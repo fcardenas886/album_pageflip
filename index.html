@@ -2,17 +2,22 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Álbum de Amor 💖</title>
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       background: url('imagenes/fondo.jpg') no-repeat center center fixed;
       background-size: cover;
       font-family: 'Quicksand', sans-serif;
       margin: 0;
       padding: 0;
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -28,18 +33,111 @@
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       z-index: 0;
-      background-color: rgba(255, 240, 245, 0.3); /* color semi-transparente para mejor efecto */
+      background-color: rgba(255, 240, 245, 0.3);
+    }
+
+    /* Contenedor de corazones flotantes */
+    #hearts-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 20px;
+      color: rgba(255, 133, 162, 0.6);
+      animation: floatHeart linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes floatHeart {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.8;
+      }
+      90% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Pétalos de rosa */
+    .petal {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: radial-gradient(ellipse at center, #ffb3d9 0%, #ff85a2 50%, transparent 70%);
+      border-radius: 50% 0 50% 0;
+      animation: floatPetal linear infinite;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    @keyframes floatPetal {
+      0% {
+        transform: translateY(-50px) rotate(0deg) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.7;
+      }
+      50% {
+        transform: translateY(50vh) rotate(180deg) translateX(100px);
+      }
+      90% {
+        opacity: 0.7;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg) translateX(-50px);
+        opacity: 0;
+      }
+    }
+
+    /* Contenedor principal del flipbook */
+    #flipbook-container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 900px;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     #flipbook {
-      width: 800px;
-      height: 500px;
-      box-shadow: 0 0 15px rgba(176, 65, 109, 0.5);
       position: relative;
       z-index: 1;
-      background: white;
-      border-radius: 10px;
-      overflow: hidden;
+      /* Brillo dorado/rosado en los bordes - sin romper el layout */
+      box-shadow: 0 0 15px rgba(176, 65, 109, 0.5),
+                  0 0 25px rgba(255, 215, 0, 0.3),
+                  inset 0 0 30px rgba(255, 215, 0, 0.1);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% {
+        box-shadow: 0 0 15px rgba(176, 65, 109, 0.5),
+                    0 0 25px rgba(255, 215, 0, 0.3),
+                    inset 0 0 30px rgba(255, 215, 0, 0.1);
+      }
+      50% {
+        box-shadow: 0 0 20px rgba(176, 65, 109, 0.7),
+                    0 0 35px rgba(255, 215, 0, 0.5),
+                    inset 0 0 40px rgba(255, 215, 0, 0.2);
+      }
     }
 
     .page {
@@ -52,6 +150,74 @@
       font-size: 20px;
       padding: 20px;
       box-sizing: border-box;
+      position: relative;
+    }
+
+    /* Página final especial */
+    .page-final {
+      background: linear-gradient(135deg, #ffeef8 0%, #ffe0f0 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-final::before {
+      content: "💕";
+      position: absolute;
+      font-size: 200px;
+      opacity: 0.1;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: heartbeat 2s ease-in-out infinite;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.1);
+      }
+    }
+
+    .page-final h2 {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      font-family: 'Great Vibes', cursive;
+      font-size: 48px;
+      color: #b0416d;
+      margin: 20px 0;
+      text-shadow: 2px 2px 4px rgba(255, 215, 0, 0.3);
+    }
+
+    .page-final p {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      font-size: 18px;
+      color: #6a2c3f;
+      font-style: italic;
+      margin: 10px 40px;
+    }
+
+    /* Confeti de corazones para la última página */
+    .confetti-heart {
+      position: absolute;
+      font-size: 24px;
+      animation: confettiFall 3s ease-in-out;
+      pointer-events: none;
+    }
+
+    @keyframes confettiFall {
+      0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(600px) rotate(720deg);
+        opacity: 0;
+      }
     }
 
     .page img {
@@ -61,293 +227,424 @@
       box-shadow: 0 0 5px rgba(176, 65, 109, 0.3);
       margin-bottom: 10px;
       cursor: zoom-in;
-      transition: transform 0.3s ease;
+      transition: all 0.4s ease;
+      filter: brightness(1);
     }
 
     .page img:hover {
-      transform: scale(1.03);
+      transform: scale(1.05);
+      filter: brightness(1.15) drop-shadow(0 0 15px rgba(255, 133, 162, 0.6));
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
     }
 
     .caption {
       font-style: italic;
       text-align: center;
+      font-size: 16px;
     }
 
-    @media (max-width: 768px) {
-      #flipbook {
-        transform: scale(0.9);
-        transform-origin: center top;
-      }
-    }
     /* Capa texto flotante */
     .floating-text {
-  position: absolute;
-  top: 10%;
-  font-family: 'Great Vibes', cursive;
-  font-size: 2rem;
-  color: #ff85a2;
-  animation: float 5s ease-in-out infinite;
-  z-index: 2;
-}
+      position: absolute;
+      top: 5%;
+      font-family: 'Great Vibes', cursive;
+      font-size: 2rem;
+      color: #ff85a2;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      animation: float 5s ease-in-out infinite;
+      z-index: 2;
+    }
 
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
-}
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
 
-/* Efecto de desvanecimiento en el título */
-.fade-in-title {
-  opacity: 0;
-  animation: fadeIn 2s ease-in-out forwards;
-}
+    .fade-in-title {
+      opacity: 0;
+      animation: fadeIn 2s ease-in-out forwards;
+    }
 
-@keyframes fadeIn {
-  to { opacity: 1; }
-}
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
 
-/* Estilo de portada con mosaico */
-.portada-mosaico {
-  position: relative;
-  padding: 0;
-  margin: 0;
-  overflow: hidden;
-  background: white;
-}
+    /* Estilo de portada con mosaico */
+    .portada-mosaico {
+      position: relative;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+      background: white;
+    }
 
-.mosaico {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 5px;
-  width: 100%;
-  height: 100%;
-}
+    .mosaico {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 5px;
+      width: 100%;
+      height: 100%;
+    }
 
-.mosaico img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
+    .mosaico img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
 
-.portada-mosaico .mosaico img {
-  filter: blur(3px);
-  transition: filter 0.3s ease;
-  pointer-events: none; /* evita interacción innecesaria */
-}
+    .portada-mosaico .mosaico img {
+      filter: blur(3px);
+      transition: filter 0.3s ease;
+      pointer-events: none;
+    }
 
-.mosaico img:hover {
-  transform: scale(1.05);
-}
+    .mosaico img:hover {
+      transform: scale(1.05);
+    }
 
-.texto-portada {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  background-color: rgba(255, 240, 245, 0.7);
-  padding: 20px 30px;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(176, 65, 109, 0.4);
-  z-index: 2;
-}
+    .texto-portada {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      background-color: rgba(255, 240, 245, 0.9);
+      padding: 20px 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(176, 65, 109, 0.4);
+      z-index: 2;
+    }
 
-.portada-titulo {
-  font-family: 'Great Vibes', cursive;
-  font-size: 48px;
-  color: #b0416d;
-  margin: 0;
-}
+    .portada-titulo {
+      font-family: 'Great Vibes', cursive;
+      font-size: 48px;
+      color: #b0416d;
+      margin: 0;
+    }
 
-.portada-subtitulo {
-  font-family: 'Quicksand', sans-serif;
-  font-size: 18px;
-  color: #6a2c3f;
-  margin: 10px 0 20px;
-}
+    .portada-subtitulo {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 18px;
+      color: #6a2c3f;
+      margin: 10px 0 20px;
+    }
 
-.comenzar-btn {
-  padding: 10px 20px;
-  font-size: 18px;
-  background-color: #f78da7;
-  border: none;
-  border-radius: 20px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s;
-}
+    .comenzar-btn {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #f78da7;
+      border: none;
+      border-radius: 20px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
 
-.comenzar-btn:hover {
-  background-color: #ff6f91;
-}
+    .comenzar-btn:hover {
+      background-color: #ff6f91;
+    }
+
+    /* Control de sonido */
+    .sound-control {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 10px 15px;
+      border-radius: 25px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .sound-control:hover {
+      background: rgba(255, 255, 255, 1);
+      transform: scale(1.05);
+    }
+
+    .sound-control span {
+      font-size: 24px;
+    }
+
+    /* RESPONSIVE MEJORADO */
+    
+    /* Móviles grandes */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      #flipbook-container {
+        padding: 10px;
+      }
+
+      .floating-text {
+        font-size: 1.5rem;
+        top: 2%;
+      }
+
+      .page {
+        font-size: 16px;
+        padding: 15px;
+      }
+
+      .page img {
+        max-height: 65%;
+      }
+
+      .caption {
+        font-size: 14px;
+      }
+
+      .portada-titulo {
+        font-size: 32px;
+      }
+
+      .portada-subtitulo {
+        font-size: 16px;
+      }
+
+      .comenzar-btn {
+        font-size: 16px;
+        padding: 8px 16px;
+      }
+
+      .sound-control {
+        bottom: 15px;
+        right: 15px;
+        padding: 8px 12px;
+      }
+
+      .sound-control span {
+        font-size: 20px;
+      }
+    }
+
+    /* Móviles pequeños */
+    @media (max-width: 480px) {
+      .floating-text {
+        font-size: 1.2rem;
+        top: 1%;
+      }
+
+      .page {
+        font-size: 14px;
+        padding: 10px;
+      }
+
+      .page img {
+        max-height: 60%;
+      }
+
+      .caption {
+        font-size: 12px;
+      }
+
+      .portada-titulo {
+        font-size: 28px;
+      }
+
+      .portada-subtitulo {
+        font-size: 14px;
+      }
+
+      .comenzar-btn {
+        font-size: 14px;
+        padding: 6px 12px;
+      }
+
+      .texto-portada {
+        padding: 15px 20px;
+      }
+
+      .mosaico {
+        gap: 3px;
+      }
+    }
+
+    /* Modo landscape en móviles */
+    @media (max-width: 900px) and (orientation: landscape) {
+      .floating-text {
+        display: none;
+      }
+    }
     
   </style>
 </head>
 <body>
 
+<!-- Contenedor de corazones flotantes -->
+<div id="hearts-container"></div>
+
 <div class="floating-text">Para Nuestro Recuerdo Virtual 💖</div>
 
- <div id="flipbook">
-  <!--
-  <div class="page fade-in-title">
-    <h1 style="font-family: 'Great Vibes', cursive;">Nuestro Álbum 💖</h1>
-  </div> -->
-  <div class="page portada-mosaico">
-  <div class="mosaico">
-    <img src="imagenes/uno.jpeg" alt="Foto 1">
-    <img src="imagenes/dos.jpeg" alt="Foto 2">
-    <img src="imagenes/tres.jpeg" alt="Foto 3">
-    <img src="imagenes/cuatro.jpeg" alt="Foto 4">
-    <img src="imagenes/foto5.jpeg" alt="Foto 5">
-    <img src="imagenes/foto6.jpeg" alt="Foto 6">
-  </div>
-
-  <div class="texto-portada">
-    <h1 class="portada-titulo">Nuestro Álbum 💖</h1>
-    <p class="portada-subtitulo">Un viaje virtual en imágenes</p>
-    <button class="comenzar-btn" onclick="pageFlip.flipNext()">Comenzar</button>
-  </div>
+<!-- Control de sonido -->
+<div class="sound-control" id="soundToggle" title="Activar/Desactivar sonido">
+  <span id="soundIcon">🔊</span>
 </div>
 
-  <div class="page">
-    <a href="imagenes/uno.jpeg" class="glightbox" data-gallery="album">
-      <img src="imagenes/uno.jpeg" alt="Foto 1" />
-    </a>
-    <div class="caption">Primeras Fotos</div>
-  </div>
+<div id="flipbook-container">
+  <div id="flipbook">
+    <div class="page portada-mosaico">
+      <div class="mosaico">
+        <img src="imagenes/uno.jpeg" alt="Foto 1">
+        <img src="imagenes/dos.jpeg" alt="Foto 2">
+        <img src="imagenes/tres.jpeg" alt="Foto 3">
+        <img src="imagenes/cuatro.jpeg" alt="Foto 4">
+        <img src="imagenes/foto5.jpeg" alt="Foto 5">
+        <img src="imagenes/foto6.jpeg" alt="Foto 6">
+      </div>
 
-  <div class="page">
-    <a href="imagenes/dos.jpeg" class="glightbox" data-gallery="album">
-      <img src="imagenes/dos.jpeg" alt="Foto 2" />
-    </a>
-    <div class="caption">Momentos especiales</div>
-  </div>
+      <div class="texto-portada">
+        <h1 class="portada-titulo">Nuestro Álbum 💖</h1>
+        <p class="portada-subtitulo">Un viaje virtual en imágenes</p>
+        <button class="comenzar-btn" onclick="pageFlip.flipNext()">Comenzar</button>
+      </div>
+    </div>
 
-  <div class="page">
-    <a href="imagenes/tres.jpeg" class="glightbox" data-gallery="album">
-      <img src="imagenes/tres.jpeg" alt="Foto 3" />
-    </a>
-    <div class="caption">Nuestras aventuras</div>
-  </div>
+    <div class="page">
+      <a href="imagenes/uno.jpeg" class="glightbox" data-gallery="album">
+        <img src="imagenes/uno.jpeg" alt="Foto 1" />
+      </a>
+      <div class="caption">Primeras Fotos</div>
+    </div>
 
-  <div class="page">
-    <a href="imagenes/cuatro.jpeg" class="glightbox" data-gallery="album">
-      <img src="imagenes/cuatro.jpeg" alt="Foto 4" />
-    </a>
-    <div class="caption">Y vendrán muchas más...</div>
-  </div>
+    <div class="page">
+      <a href="imagenes/dos.jpeg" class="glightbox" data-gallery="album">
+        <img src="imagenes/dos.jpeg" alt="Foto 2" />
+      </a>
+      <div class="caption">Momentos especiales</div>
+    </div>
 
-  <div class="page">
-    <a href="imagenes/foto5.jpeg" class="glightbox" data-gallery="album">
-      <img src="imagenes/foto5.jpeg" alt="Foto 5" />
-    </a>
-    <div class="caption">Momentos Especiales...</div>
-  </div>
+    <div class="page">
+      <a href="imagenes/tres.jpeg" class="glightbox" data-gallery="album">
+        <img src="imagenes/tres.jpeg" alt="Foto 3" />
+      </a>
+      <div class="caption">Nuestras aventuras</div>
+    </div>
 
-  <div class="page">
-    <a href="imagenes/foto6.jpeg" class="glightbox" data-gallery="album">
-      <img src="imagenes/foto6.jpeg" alt="Foto 6" />
-    </a>
-    <div class="caption">Y vendrán muchas más...</div>
-  </div>
+    <div class="page">
+      <a href="imagenes/cuatro.jpeg" class="glightbox" data-gallery="album">
+        <img src="imagenes/cuatro.jpeg" alt="Foto 4" />
+      </a>
+      <div class="caption">Y vendrán muchas más...</div>
+    </div>
 
-  <div class="page">
-    <a href="imagenes/foto7.jpeg" class="glightbox" data-gallery="album">
-      <img src="imagenes/foto7.jpeg" alt="Foto 7" />
-    </a>
-    <div class="caption">Y ... Continuara</div>
-  </div>
+    <div class="page">
+      <a href="imagenes/foto5.jpeg" class="glightbox" data-gallery="album">
+        <img src="imagenes/foto5.jpeg" alt="Foto 5" />
+      </a>
+      <div class="caption">Momentos Especiales...</div>
+    </div>
 
-  <div class="page">
-    <a href="imagenes/foto8.jpeg" class="glightbox" data-gallery="album">
-      <img src="imagenes/foto8.jpeg" alt="Foto 8" />
-    </a>
-    <div class="caption">Agregando pequeños momentos</div>
-  </div>
+    <div class="page">
+      <a href="imagenes/foto6.jpeg" class="glightbox" data-gallery="album">
+        <img src="imagenes/foto6.jpeg" alt="Foto 6" />
+      </a>
+      <div class="caption">Y vendrán muchas más...</div>
+    </div>
 
-  <div class="page">
-    <a href="imagenes/foto9.jpeg" class="glightbox" data-gallery="album">
-      <img src="imagenes/foto9.jpeg" alt="Foto 9" />
-    </a>
-    <div class="caption"></div>
-  </div>
+    <div class="page">
+      <a href="imagenes/foto7.jpeg" class="glightbox" data-gallery="album">
+        <img src="imagenes/foto7.jpeg" alt="Foto 7" />
+      </a>
+      <div class="caption">Y ... Continuara</div>
+    </div>
 
-  <div class="page">
-    <a href="imagenes/foto10.jpg" class="glightbox" data-gallery="album">
-      <img src="imagenes/foto10.jpg" alt="Foto 10" />
-    </a>
-    <div class="caption">Nuevos Momentos </div>
-  </div>
+    <div class="page">
+      <a href="imagenes/foto8.jpeg" class="glightbox" data-gallery="album">
+        <img src="imagenes/foto8.jpeg" alt="Foto 8" />
+      </a>
+      <div class="caption">Agregando pequeños momentos</div>
+    </div>
 
-  <div class="page">
-    <a href="imagenes/foto11.jpg" class="glightbox" data-gallery="album">
-      <img src="imagenes/foto11.jpg" alt="Foto 11" />
-    </a>
-    <div class="caption"></div>
-  </div>
+    <div class="page">
+      <a href="imagenes/foto9.jpeg" class="glightbox" data-gallery="album">
+        <img src="imagenes/foto9.jpeg" alt="Foto 9" />
+      </a>
+      <div class="caption"></div>
+    </div>
 
-  <div class="page">
-    <a href="imagenes/foto12.jpg" class="glightbox" data-gallery="album">
-      <img src="imagenes/foto12.jpg" alt="Foto 12" />
-    </a>
-    <div class="caption"></div>
-  </div>
+    <div class="page">
+      <a href="imagenes/foto10.jpg" class="glightbox" data-gallery="album">
+        <img src="imagenes/foto10.jpg" alt="Foto 10" />
+      </a>
+      <div class="caption">Nuevos Momentos </div>
+    </div>
 
-  <div class="page">
-    <a href="imagenes/foto13.jpg" class="glightbox" data-gallery="album">
-      <img src="imagenes/foto13.jpg" alt="Foto 13" />
-    </a>
-    <div class="caption">Y cuando nos volvimos a encontrar</div>
-  </div>
+    <div class="page">
+      <a href="imagenes/foto11.jpg" class="glightbox" data-gallery="album">
+        <img src="imagenes/foto11.jpg" alt="Foto 11" />
+      </a>
+      <div class="caption"></div>
+    </div>
 
-  <div class="page">
-    <a href="imagenes/foto14.jpg" class="glightbox" data-gallery="album">
-      <img src="imagenes/foto14.jpg" alt="Foto 14" />
-    </a>
-    <div class="caption"></div>
-  </div>
+    <div class="page">
+      <a href="imagenes/foto12.jpg" class="glightbox" data-gallery="album">
+        <img src="imagenes/foto12.jpg" alt="Foto 12" />
+      </a>
+      <div class="caption"></div>
+    </div>
 
-  <div class="page">
-    <a href="imagenes/foto15.jpg" class="glightbox" data-gallery="album">
-      <img src="imagenes/foto15.jpg" alt="Foto 15" />
-    </a>
-    <div class="caption"></div>
-  </div>
+    <div class="page">
+      <a href="imagenes/foto13.jpg" class="glightbox" data-gallery="album">
+        <img src="imagenes/foto13.jpg" alt="Foto 13" />
+      </a>
+      <div class="caption">Y cuando nos volvimos a encontrar</div>
+    </div>
 
-  <div class="page">
-    <a href="imagenes/foto16.jpg" class="glightbox" data-gallery="album">
-      <img src="imagenes/foto16.jpg" alt="Foto 16" />
-    </a>
-    <div class="caption">Y ... Continuara</div>
-  </div>
+    <div class="page">
+      <a href="imagenes/foto14.jpg" class="glightbox" data-gallery="album">
+        <img src="imagenes/foto14.jpg" alt="Foto 14" />
+      </a>
+      <div class="caption"></div>
+    </div>
 
-  <div class="page">
-    <a href="imagenes/foto17.jpg" class="glightbox" data-gallery="album">
-      <img src="imagenes/foto17.jpg" alt="Foto 17" />
-    </a>
-    <div class="caption"> ... </div>
-  </div>
+    <div class="page">
+      <a href="imagenes/foto15.jpg" class="glightbox" data-gallery="album">
+        <img src="imagenes/foto15.jpg" alt="Foto 15" />
+      </a>
+      <div class="caption"></div>
+    </div>
 
-  <div class="page">
-    <a href="imagenes/foto18.jpg" class="glightbox" data-gallery="album">
-      <img src="imagenes/foto18.jpg" alt="Foto 17" />
-    </a>
-    <div class="caption">... </div>
-  </div>
+    <div class="page">
+      <a href="imagenes/foto16.jpg" class="glightbox" data-gallery="album">
+        <img src="imagenes/foto16.jpg" alt="Foto 16" />
+      </a>
+      <div class="caption">Y ... Continuara</div>
+    </div>
 
-  <div class="page">
-    <a href="imagenes/foto19.jpg" class="glightbox" data-gallery="album">
-      <img src="imagenes/foto19.jpg" alt="Foto 17" />
-    </a>
-    <div class="caption">... </div>
-  </div>
+    <div class="page">
+      <a href="imagenes/foto17.jpg" class="glightbox" data-gallery="album">
+        <img src="imagenes/foto17.jpg" alt="Foto 17" />
+      </a>
+      <div class="caption"> ... </div>
+    </div>
 
+    <div class="page">
+      <a href="imagenes/foto18.jpg" class="glightbox" data-gallery="album">
+        <img src="imagenes/foto18.jpg" alt="Foto 18" />
+      </a>
+      <div class="caption">... </div>
+    </div>
 
-  <div class="page">
-    <h2>Fin del Capítulo 💕</h2>
+    <div class="page">
+      <a href="imagenes/foto19.jpg" class="glightbox" data-gallery="album">
+        <img src="imagenes/foto19.jpg" alt="Foto 19" />
+      </a>
+      <div class="caption">... </div>
+    </div>
+
+    <div class="page page-final">
+      <h2>Fin del Capítulo 💕</h2>
+      <p>Cada momento contigo es un recuerdo que atesoro</p>
+      <p>Esta historia continuará... ✨</p>
+    </div>
   </div>
 </div>
 
@@ -356,48 +653,192 @@
 <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 
 <script>
-  // Inicia efecto libro
-//   const pageFlip = new St.PageFlip(document.getElementById("flipbook"), {
-//   width: 400,
-//   height: 500,
-//   size: "fixed",
-//   showCover: true,
-//   maxShadowOpacity: 0.5,
-//   mobileScrollSupport: true
-// });
+  // Sistema de sonido para pasar páginas
+  let soundEnabled = true;
+  
+  // Crear el sonido de pasar página usando Web Audio API
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  
+  function playPageFlipSound() {
+    if (!soundEnabled) return;
+    
+    const now = audioContext.currentTime;
+    
+    // Sonido más corto y realista
+    const bufferSize = audioContext.sampleRate * 0.35; // 0.35 segundos
+    const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+    const data = buffer.getChannelData(0);
+    
+    // Generar ruido rosa (más natural)
+    let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+    for (let i = 0; i < bufferSize; i++) {
+      const white = Math.random() * 2 - 1;
+      b0 = 0.99886 * b0 + white * 0.0555179;
+      b1 = 0.99332 * b1 + white * 0.0750759;
+      b2 = 0.96900 * b2 + white * 0.1538520;
+      b3 = 0.86650 * b3 + white * 0.3104856;
+      b4 = 0.55000 * b4 + white * 0.5329522;
+      b5 = -0.7616 * b5 - white * 0.0168980;
+      const pink = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.11;
+      b6 = white * 0.115926;
+      
+      // Envolvente más realista - rápido inicio, sostenido corto, fade out
+      let envelope;
+      const attackTime = bufferSize * 0.05; // 5% ataque rápido
+      const sustainTime = bufferSize * 0.5; // 50% sostenido
+      
+      if (i < attackTime) {
+        envelope = (i / attackTime) * 0.6;
+      } else if (i < sustainTime) {
+        envelope = 0.6;
+      } else {
+        const releaseProgress = (i - sustainTime) / (bufferSize - sustainTime);
+        envelope = 0.6 * (1 - releaseProgress * releaseProgress); // Fade cuadrático más suave
+      }
+      
+      data[i] = pink * envelope * 0.05; // Volumen un poco más fuerte
+    }
+    
+    const noiseSource = audioContext.createBufferSource();
+    noiseSource.buffer = buffer;
+    
+    // Filtro paso banda más ajustado para papel
+    const bandpass = audioContext.createBiquadFilter();
+    bandpass.type = 'bandpass';
+    bandpass.frequency.setValueAtTime(2500, now);
+    bandpass.Q.setValueAtTime(1, now);
+    
+    // Resonancia sutil que simula textura del papel
+    const filter2 = audioContext.createBiquadFilter();
+    filter2.type = 'peaking';
+    filter2.frequency.setValueAtTime(3500, now);
+    filter2.frequency.linearRampToValueAtTime(2200, now + 0.25);
+    filter2.Q.setValueAtTime(1.5, now);
+    filter2.gain.setValueAtTime(2, now);
+    
+    // Control de volumen final - un poco más fuerte
+    const gainNode = audioContext.createGain();
+    gainNode.gain.setValueAtTime(0.08, now);
+    gainNode.gain.linearRampToValueAtTime(0.07, now + 0.2);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+    
+    // Conexiones
+    noiseSource.connect(bandpass);
+    bandpass.connect(filter2);
+    filter2.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    noiseSource.start(now);
+    noiseSource.stop(now + 0.35);
+  }
 
-const pageFlip = new St.PageFlip(document.getElementById("flipbook"), {
-  width: 400,
-  height: 500,
-  size: "fixed",
-  showCover: true,
-  maxShadowOpacity: 0.5,
-  mobileScrollSupport: true,
-  useMouseEvents: true,
-  animationSpeed: 800  // más suave
-});
-
-pageFlip.loadFromHTML(document.querySelectorAll(".page"));
-
-// Inicia GLightbox
-const lightbox = GLightbox({
-  selector: '.glightbox',
-  touchNavigation: true,
-  loop: true,
-  zoomable: true,
-  openEffect: 'zoom',
-  closeEffect: 'zoom',
-  slideEffect: 'slide'
-});
-
-// Bloquear que el flipbook cambie página al tocar el enlace de la imagen
-document.querySelectorAll('.page a').forEach(anchor => {
-  ['pointerdown', 'pointerup', 'touchstart', 'touchend', 'mousedown', 'mouseup'].forEach(evt => {
-    anchor.addEventListener(evt, e => e.stopPropagation());
+  // Toggle de sonido
+  document.getElementById('soundToggle').addEventListener('click', () => {
+    soundEnabled = !soundEnabled;
+    document.getElementById('soundIcon').textContent = soundEnabled ? '🔊' : '🔇';
   });
-});
+
+  // Crear corazones flotantes
+  function createHeart() {
+    const heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.textContent = '💖';
+    
+    heart.style.left = Math.random() * 100 + '%';
+    heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+    heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
+    
+    document.getElementById('hearts-container').appendChild(heart);
+    
+    setTimeout(() => {
+      heart.remove();
+    }, 7000);
+  }
+
+  // Crear pétalos de rosa
+  function createPetal() {
+    const petal = document.createElement('div');
+    petal.className = 'petal';
+    
+    petal.style.left = Math.random() * 100 + '%';
+    petal.style.animationDuration = (Math.random() * 4 + 5) + 's';
+    petal.style.width = (Math.random() * 8 + 8) + 'px';
+    petal.style.height = (Math.random() * 8 + 8) + 'px';
+    petal.style.animationDelay = Math.random() * 2 + 's';
+    
+    document.getElementById('hearts-container').appendChild(petal);
+    
+    setTimeout(() => {
+      petal.remove();
+    }, 9000);
+  }
+
+  // Generar corazones y pétalos
+  setInterval(createHeart, 1200);
+  setInterval(createPetal, 600);
+
+  // Inicia efecto libro - CONFIGURACIÓN ORIGINAL QUE FUNCIONABA
+  const pageFlip = new St.PageFlip(document.getElementById("flipbook"), {
+    width: 400,
+    height: 500,
+    size: "fixed",
+    showCover: true,
+    maxShadowOpacity: 0.5,
+    mobileScrollSupport: true,
+    useMouseEvents: true,
+    animationSpeed: 800
+  });
+
+  pageFlip.loadFromHTML(document.querySelectorAll(".page"));
+
+  // Reproducir sonido al cambiar página
+  pageFlip.on('flip', (e) => {
+    playPageFlipSound();
+    
+    // Confeti de corazones en la última página
+    if (e.data === pageFlip.getPageCount() - 1) {
+      createConfetti();
+    }
+  });
+
+  // Crear confeti de corazones
+  function createConfetti() {
+    const colors = ['❤️', '💕', '💖', '💗', '💓', '💝'];
+    for (let i = 0; i < 20; i++) {
+      setTimeout(() => {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti-heart';
+        confetti.textContent = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.animationDelay = Math.random() * 0.5 + 's';
+        
+        document.body.appendChild(confetti);
+        
+        setTimeout(() => {
+          confetti.remove();
+        }, 3000);
+      }, i * 100);
+    }
+  }
+
+  // Inicia GLightbox
+  const lightbox = GLightbox({
+    selector: '.glightbox',
+    touchNavigation: true,
+    loop: true,
+    zoomable: true,
+    openEffect: 'zoom',
+    closeEffect: 'zoom',
+    slideEffect: 'slide'
+  });
+
+  // Bloquear que el flipbook cambie página al tocar el enlace de la imagen
+  document.querySelectorAll('.page a').forEach(anchor => {
+    ['pointerdown', 'pointerup', 'touchstart', 'touchend', 'mousedown', 'mouseup'].forEach(evt => {
+      anchor.addEventListener(evt, e => e.stopPropagation());
+    });
+  });
 </script>
 
 </body>
 </html>
-
